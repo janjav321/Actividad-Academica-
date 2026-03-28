@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificador — UNIBE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #0a1628;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f7f4ef;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e2ddd6;
+    --white: #ffffff;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: var(--navy);
+    padding: 1.25rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo-area { display: flex; align-items: center; gap: 1rem; }
+  .logo-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 15px;
+    color: var(--gold); font-weight: 700;
+  }
+  .header-text h1 { font-family: 'Playfair Display', serif; font-size: 16px; color: white; font-weight: 600; }
+  .header-text p { font-size: 11px; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 300; margin-top: 1px; }
+  .organizer-badge {
+    font-size: 11px; background: rgba(201,168,76,0.15);
+    color: var(--gold); border: 1px solid rgba(201,168,76,0.3);
+    padding: 4px 12px; border-radius: 999px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500;
+  }
+
+  main { max-width: 560px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 0.25rem; }
+  .subtitle { font-size: 14px; color: var(--muted); margin-bottom: 2rem; }
+
+  .tabs { display: flex; gap: 4px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 4px; margin-bottom: 1.5rem; }
+  .tab {
+    flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 500;
+    border-radius: 9px; cursor: pointer; border: none; background: transparent;
+    color: var(--muted); transition: all 0.2s; font-family: 'DM Sans', sans-serif;
+  }
+  .tab.active { background: var(--navy); color: white; }
+
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card {
+    background: var(--white); border-radius: 16px;
+    padding: 1.5rem; border: 1px solid var(--border);
+    box-shadow: 0 2px 20px rgba(10,22,40,0.06);
+  }
+
+  #scanner-box { border-radius: 12px; overflow: hidden; background: #000; min-height: 260px; }
+  #html5-qrcode-button-camera-start, #html5-qrcode-button-camera-stop { display: none !important; }
+
+  .scan-btn {
+    width: 100%; margin-top: 1rem; padding: 13px;
+    background: var(--navy); color: white; border: none;
+    border-radius: 10px; font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 500; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .scan-btn:hover { background: #162040; }
+  .scan-btn.stop { background: #991b1b; }
+
+  .search-row { display: flex; gap: 8px; }
+  .search-row input {
+    flex: 1; padding: 11px 14px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    color: var(--text); background: var(--cream); outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-row input:focus { border-color: var(--gold); background: var(--white); }
+  .search-row button {
+    padding: 0 18px; background: var(--navy); color: white;
+    border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .search-row button:hover { background: #162040; }
+
+  .result-card {
+    margin-top: 1.25rem; border-radius: 14px; padding: 1.25rem;
+    border: 2px solid transparent; display: none;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+
+  .result-card.valid { background: #f0fdf4; border-color: #86efac; }
+  .result-card.invalid { background: #fef2f2; border-color: #fca5a5; }
+
+  .result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+  .result-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .valid .result-icon { background: #16a34a; color: white; }
+  .invalid .result-icon { background: #dc2626; color: white; }
+  .result-status { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+  .valid .result-status { color: #14532d; }
+  .invalid .result-status { color: #7f1d1d; }
+  .result-sub { font-size: 13px; }
+  .valid .result-sub { color: #166534; }
+  .invalid .result-sub { color: #991b1b; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 0.75rem; }
+  .info-item { background: rgba(255,255,255,0.7); border-radius: 8px; padding: 8px 12px; }
+  .info-item strong { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); display: block; font-weight: 500; }
+  .info-item span { font-size: 14px; color: var(--text); font-weight: 500; }
+
+  /* List */
+  .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  .count-badge { font-size: 12px; background: var(--cream); color: var(--muted); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); }
+  .person-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px; border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 8px;
+    background: var(--cream);
+  }
+  .avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--navy); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; flex-shrink: 0;
+    font-family: 'Playfair Display', serif;
+  }
+  .person-name { font-size: 14px; font-weight: 500; }
+  .person-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .badge-ok { background: #dcfce7; color: #166534; font-size: 11px; padding: 3px 10px; border-radius: 999px; font-weight: 500; margin-left: auto; white-space: nowrap; }
+
+  .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
+  .refresh-btn { background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 6px 14px; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; color: var(--muted); }
+  .refresh-btn:hover { background: var(--cream); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <div class="logo-circle">U</div>
+    <div class="header-text">
+      <h1>UNIBE</h1>
+      <p>Universidad Iberoamericana</p>
+    </div>
+  </div>
+  <span class="organizer-badge">Organizador</span>
+</header>
+
+<main>
+  <h2>Panel de verificación</h2>
+  <p class="subtitle">Escanea el QR o busca por nombre o cédula para confirmar el registro.</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('scanner')">Escanear QR</button>
+    <button class="tab" onclick="switchTab('buscar')">Buscar</button>
+    <button class="tab" onclick="switchTab('lista')">Lista completa</button>
+  </div>
+
+  <!-- SCANNER -->
+  <div id="panel-scanner" class="panel active">
+    <div class="card">
+      <div id="scanner-box"></div>
+      <button class="scan-btn" id="scan-toggle" onclick="toggleScanner()">Iniciar cámara</button>
+      <div class="result-card" id="scan-result"></div>
+    </div>
+  </div>
+
+  <!-- BUSCAR -->
+  <div id="panel-buscar" class="panel">
+    <div class="card">
+      <div class="search-row">
+        <input type="text" id="inp-buscar" placeholder="Nombre, apellido o cédula..." onkeydown="if(event.key==='Enter')buscar()">
+        <button onclick="buscar()">Buscar</button>
+      </div>
+      <div class="result-card" id="search-result"></div>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div id="panel-lista" class="panel">
+    <div class="card">
+      <div class="list-header">
+        <span class="count-badge" id="count-label">Cargando...</span>
+        <button class="refresh-btn" onclick="loadList()">Actualizar</button>
+      </div>
+      <div id="lista-content"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+let scanner = null;
+let scanning = false;
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', ['scanner','buscar','lista'][i] === name);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'lista') loadList();
+  if (name !== 'scanner' && scanning) stopScanner();
+}
+
+async function toggleScanner() {
+  if (scanning) { stopScanner(); return; }
+
+  const btn = document.getElementById('scan-toggle');
+  btn.textContent = 'Iniciando...';
+
+  scanner = new Html5Qrcode('scanner-box');
+  try {
+    await scanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 220, height: 220 } },
+      async (text) => {
+        await stopScanner();
+        await verificarCodigo(text, 'scan-result');
+      },
+      () => {}
+    );
+    scanning = true;
+    btn.textContent = 'Detener cámara';
+    btn.classList.add('stop');
+  } catch(e) {
+    btn.textContent = 'Iniciar cámara';
+    document.getElementById('scan-result').style.display = 'block';
+    document.getElementById('scan-result').className = 'result-card invalid';
+    document.getElementById('scan-result').innerHTML = '<p style="color:#991b1b;font-size:14px;">No se pudo acceder a la cámara. Usa la pestaña "Buscar" en su lugar.</p>';
+  }
+}
+
+async function stopScanner() {
+  if (scanner && scanning) {
+    try { await scanner.stop(); } catch(e) {}
+    scanning = false;
+  }
+  const btn = document.getElementById('scan-toggle');
+  btn.textContent = 'Iniciar cámara';
+  btn.classList.remove('stop');
+}
+
+async function verificarCodigo(raw, targetId) {
+  // Parse QR: UNIBE|CODIGO|NOMBRE|CEDULA
+  const parts = raw.split('|');
+  let codigo = '';
+  if (parts[0] === 'UNIBE' && parts[1]) {
+    codigo = parts[1];
+  } else {
+    codigo = raw.trim();
+  }
+
+  try {
+    const res = await fetch(`/api/verificar?codigo=${encodeURIComponent(codigo)}`);
+    const data = await res.json();
+    showResult(targetId, data.encontrado, data.persona);
+  } catch(e) {
+    showResult(targetId, false, null);
+  }
+}
+
+async function buscar() {
+  const q = document.getElementById('inp-buscar').value.trim();
+  if (!q) return;
+  try {
+    const res = await fetch(`/api/verificar?q=${encodeURIComponent(q)}`);
+    const data = await res.json();
+    showResult('search-result', data.encontrado, data.persona);
+  } catch(e) {
+    showResult('search-result', false, null);
+  }
+}
+
+function showResult(targetId, valid, persona) {
+  const el = document.getElementById(targetId);
+  el.style.display = 'block';
+  el.className = 'result-card ' + (valid ? 'valid' : 'invalid');
+
+  if (valid && persona) {
+    el.innerHTML = `
+      <div class="result-header">
+        <div class="result-icon">✓</div>
+        <div>
+          <div class="result-status">Registrado</div>
+          <div class="result-sub">Acceso permitido al evento</div>
+        </div>
+      </div>
+      <div class="info-grid">
+        <div class="info-item"><strong>Nombre</strong><span>${persona.nombre} ${persona.apellido}</span></div>
+        <div class="info-item"><strong>Cédula</strong><span>${persona.cedula}</span></div>
+        <div class="info-item"><strong>Correo</strong><span style="font-size:12px">${persona.email}</span></div>
+        <div class="info-item"><strong>Teléfono</strong><span>${persona.tel}</span></div>
+      </div>`;
+  } else {
+    el.innerHTML = `
+      <div class="result-header">
+        <div class="result-icon">✕</div>
+        <div>
+          <div class="result-status">No registrado</div>
+          <div class="result-sub">Esta persona no aparece en el sistema</div>
+        </div>
+      </div>`;
+  }
+}
+
+async function loadList() {
+  const cont = document.getElementById('lista-content');
+  const label = document.getElementById('count-label');
+  cont.innerHTML = '<p class="empty">Cargando...</p>';
+  try {
+    const res = await fetch('/api/lista');
+    const data = await res.json();
+    const list = data.registrados || [];
+    label.textContent = list.length + ' registrado' + (list.length !== 1 ? 's' : '');
+    if (list.length === 0) {
+      cont.innerHTML = '<p class="empty">Aún no hay registros.</p>';
+      return;
+    }
+    cont.innerHTML = list.map(p => `
+      <div class="person-row">
+        <div class="avatar">${p.nombre[0]}${p.apellido[0]}</div>
+        <div>
+          <div class="person-name">${p.nombre} ${p.apellido}</div>
+          <div class="person-meta">${p.cedula} · ${p.email}</div>
+        </div>
+        <span class="badge-ok">Registrado</span>
+      </div>
+    `).join('');
+  } catch(e) {
+    cont.innerHTML = '<p class="empty">Error cargando la lista.</p>';
+  }
+}
+</script>
+</body>
+</html>

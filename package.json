@@ -1,0 +1,8 @@
+{
+  "name": "unibe-registro",
+  "version": "1.0.0",
+  "description": "Sistema de registro con QR para actividades académicas UNIBE",
+  "dependencies": {
+    "@vercel/kv": "^1.0.0"
+  }
+}

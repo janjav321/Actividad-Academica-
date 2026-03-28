@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro — UNIBE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #162040;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f7f4ef;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e2ddd6;
+    --white: #ffffff;
+    --success: #166534;
+    --success-bg: #dcfce7;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo-circle {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--gold);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--white);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .header-text p {
+    font-size: 12px;
+    color: var(--gold-light);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .hero {
+    background: var(--navy);
+    padding: 3rem 2rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.12);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -20px; left: 50%; transform: translateX(-50%);
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    border: 1px solid rgba(201,168,76,0.08);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+
+  .hero h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 40px);
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.2;
+    max-width: 480px;
+    margin: 0 auto 0.75rem;
+  }
+
+  .hero p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+    max-width: 380px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .wave {
+    display: block;
+    background: var(--navy);
+    line-height: 0;
+  }
+
+  .wave svg { display: block; width: 100%; }
+
+  main {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+    margin-top: -2px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 40px rgba(10,22,40,0.08);
+    border: 1px solid var(--border);
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+
+  .field { margin-bottom: 1.1rem; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+
+  input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    background: var(--white);
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn {
+    width: 100%;
+    margin-top: 1.25rem;
+    padding: 14px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn:hover { background: var(--navy-mid); }
+  .btn:active { transform: scale(0.99); }
+  .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .btn-gold:hover { background: var(--gold-light); }
+
+  .error-msg {
+    display: none;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-top: 1rem;
+    border-left: 3px solid #ef4444;
+  }
+
+  /* QR Result */
+  #result-section {
+    display: none;
+    animation: fadeUp 0.5s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-banner {
+    background: var(--success-bg);
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .check-icon {
+    width: 28px; height: 28px;
+    background: #16a34a;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: white;
+    font-size: 14px;
+  }
+
+  .success-banner p { font-size: 14px; color: var(--success); font-weight: 500; }
+  .success-banner span { font-size: 12px; color: #15803d; display: block; }
+
+  .qr-wrapper {
+    text-align: center;
+    padding: 1.5rem 0;
+  }
+
+  .qr-wrapper img {
+    border-radius: 12px;
+    border: 3px solid var(--navy);
+    display: block;
+    margin: 0 auto;
+  }
+
+  .qr-code-label {
+    margin-top: 0.75rem;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .person-info {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+  }
+
+  .person-info p { font-size: 14px; color: var(--text); line-height: 1.8; }
+  .person-info strong { font-weight: 500; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; display: block; }
+
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  .hint {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-circle">U</div>
+  <div class="header-text">
+    <h1>UNIBE</h1>
+    <p>Universidad Iberoamericana</p>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">Actividad Académica</div>
+  <h2>Formulario de Registro</h2>
+  <p>Completa tus datos para obtener tu código QR de acceso al evento.</p>
+</div>
+
+<div class="wave">
+  <svg viewBox="0 0 1440 40" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,40 L0,20 Q360,0 720,20 Q1080,40 1440,20 L1440,40 Z" fill="#f7f4ef"/>
+  </svg>
+</div>
+
+<main>
+
+  <!-- FORM -->
+  <div id="form-section" class="card">
+    <p class="card-title">Tus datos</p>
+    <div class="row">
+      <div class="field">
+        <label>Nombre</label>
+        <input type="text" id="inp-nombre" placeholder="Juan">
+      </div>
+      <div class="field">
+        <label>Apellido</label>
+        <input type="text" id="inp-apellido" placeholder="Pérez">
+      </div>
+    </div>
+    <div class="field">
+      <label>Cédula</label>
+      <input type="text" id="inp-cedula" placeholder="000-0000000-0" maxlength="13">
+    </div>
+    <div class="field">
+      <label>Correo electrónico</label>
+      <input type="email" id="inp-email" placeholder="juan@unibe.edu.do">
+    </div>
+    <div class="field">
+      <label>Teléfono</label>
+      <input type="tel" id="inp-tel" placeholder="809-000-0000">
+    </div>
+
+    <div id="error-msg" class="error-msg"></div>
+    <button class="btn btn-gold" id="btn-registrar" onclick="registrar()">Registrarme y obtener QR</button>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-section" class="card">
+    <div class="success-banner">
+      <div class="check-icon">✓</div>
+      <div>
+        <p>¡Registro completado!</p>
+        <span>Guarda tu QR para presentarlo en el evento</span>
+      </div>
+    </div>
+
+    <div class="qr-wrapper">
+      <img id="qr-img" src="" width="220" height="220" alt="Código QR">
+      <p class="qr-code-label" id="codigo-label"></p>
+    </div>
+
+    <div class="person-info">
+      <p><strong>Nombre completo</strong><span id="res-nombre"></span></p>
+      <p><strong>Cédula</strong><span id="res-cedula"></span></p>
+      <p><strong>Correo</strong><span id="res-email"></span></p>
+    </div>
+
+    <div class="divider"></div>
+    <p class="hint">📱 Toma una captura de pantalla o deja esta página abierta. Al llegar al evento, muestra este QR para ser verificado.</p>
+
+    <button class="btn" style="margin-top:1.25rem" onclick="window.print()">Imprimir / Guardar QR</button>
+  </div>
+
+</main>
+
+<footer>UNIBE · Universidad Iberoamericana &nbsp;·&nbsp; Actividad Académica</footer>
+
+<script>
+  // Format cedula
+  document.getElementById('inp-cedula').addEventListener('input', function() {
+    const d = this.value.replace(/\D/g,'').slice(0,11);
+    if (d.length <= 3) this.value = d;
+    else if (d.length <= 10) this.value = d.slice(0,3)+'-'+d.slice(3);
+    else this.value = d.slice(0,3)+'-'+d.slice(3,10)+'-'+d.slice(10);
+  });
+
+  async function registrar() {
+    const nombre  = document.getElementById('inp-nombre').value.trim();
+    const apellido= document.getElementById('inp-apellido').value.trim();
+    const cedula  = document.getElementById('inp-cedula').value.trim();
+    const email   = document.getElementById('inp-email').value.trim();
+    const tel     = document.getElementById('inp-tel').value.trim();
+    const errEl   = document.getElementById('error-msg');
+    const btn     = document.getElementById('btn-registrar');
+
+    if (!nombre || !apellido || !cedula || !email || !tel) {
+      errEl.textContent = 'Por favor completa todos los campos.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      errEl.textContent = 'Ingresa un correo electrónico válido.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Registrando...';
+
+    try {
+      const res = await fetch('/api/registrar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, apellido, cedula, email, tel })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        errEl.textContent = data.error || 'Ocurrió un error. Intenta de nuevo.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Registrarme y obtener QR';
+        return;
+      }
+
+      // Show result
+      document.getElementById('form-section').style.display = 'none';
+      const rs = document.getElementById('result-section');
+      rs.style.display = 'block';
+
+      const qrData = encodeURIComponent(`UNIBE|${data.codigo}|${nombre} ${apellido}|${cedula}`);
+      document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${qrData}&margin=10&color=0a1628`;
+      document.getElementById('codigo-label').textContent = `Código: ${data.codigo}`;
+      document.getElementById('res-nombre').textContent = `${nombre} ${apellido}`;
+      document.getElementById('res-cedula').textContent = cedula;
+      document.getElementById('res-email').textContent = email;
+
+    } catch(e) {
+      errEl.textContent = 'Error de conexión. Intenta de nuevo.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Registrarme y obtener QR';
+    }
+  }
+</script>
+</body>
+</html>
