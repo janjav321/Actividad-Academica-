@@ -463,7 +463,8 @@
       }
 
       // Show result
-      document.getElementById('form-section').style.display = 'none';
+     console.log('Respuesta del servidor:', JSON.stringify(data));
+     document.getElementById('form-section').style.display = 'none';
       const rs = document.getElementById('result-section');
       rs.style.display = 'block';
 
