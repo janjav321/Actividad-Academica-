@@ -36,7 +36,8 @@ async function kvLpush(key, value) {
   const existeEmail  = await kvGet(`email:${email.toLowerCase()}`);
 
   if (existeCedula || existeEmail) {
-    const existing = existeCedula || existeEmail;
+    const raw = existeCedula || existeEmail;
+    const existing = typeof raw === 'string' ? JSON.parse(raw) : raw;
     return res.status(200).json({ codigo: existing.codigo, yaExistia: true });
   }
 
