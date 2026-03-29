@@ -18,19 +18,17 @@ export default async function handler(req, res) {
     return d.result ? JSON.parse(d.result) : null;
   }
 
-  async function kvSet(key, value) {
-    await fetch(`${url}/set/${encodeURIComponent(key)}`, {
+ async function kvSet(key, value) {
+    await fetch(`${url}/set/${encodeURIComponent(key)}/${encodeURIComponent(JSON.stringify(value))}`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify([JSON.stringify(value)])
+      headers: { Authorization: `Bearer ${token}` }
     });
   }
 
-  async function kvLpush(key, value) {
-    await fetch(`${url}/lpush/${encodeURIComponent(key)}`, {
+async function kvLpush(key, value) {
+    await fetch(`${url}/lpush/${encodeURIComponent(key)}/${encodeURIComponent(JSON.stringify(value))}`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify([JSON.stringify(value)])
+      headers: { Authorization: `Bearer ${token}` }
     });
   }
 
