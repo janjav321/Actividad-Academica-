@@ -467,8 +467,8 @@
       const rs = document.getElementById('result-section');
       rs.style.display = 'block';
 
-      const qrData = encodeURIComponent(`UNIBE|${data.codigo}|${nombre} ${apellido}|${cedula}`);
-      document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${qrData}&margin=10&color=0a1628`;
+      const qrData = encodeURIComponent(`https://actividad-academica.vercel.app/verificar.html?codigo=${data.codigo}`);
+document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${qrData}&margin=10&color=0a1628`;
       document.getElementById('codigo-label').textContent = `Código: ${data.codigo}`;
       document.getElementById('res-nombre').textContent = `${nombre} ${apellido}`;
       document.getElementById('res-cedula').textContent = cedula;
